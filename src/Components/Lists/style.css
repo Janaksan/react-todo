@@ -1,0 +1,11 @@
+.list-container {
+    display: flex;
+    flex-direction: column;
+    /* padding: 1rem; */
+    background-color: rgb(255 255 255);
+    border-radius: 1rem;
+    width: 40vw;
+    margin: 2rem;
+    max-height: 70vh;
+    overflow-y: scroll;
+}
