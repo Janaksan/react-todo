@@ -1,56 +1,59 @@
 
 const TASK_LIST_KEY = 'taskLists';
 
-
 //get form local storage
-export function getList() {
-    const items = localStorage.getItem(TASK_LIST_KEY);
-    return items ? JSON.parse(items) : []
+export function getFromStorage() {
+    return localStorage.getItem(TASK_LIST_KEY);
+}
+
+//update to local storage
+export function updateToStorage(payload = []) {
+    localStorage.setItem(TASK_LIST_KEY, JSON.stringify(payload))
+}
+
+export function get() {
+    const result = getFromStorage()
+    return result ? JSON.parse(result) : []
 }
 
 export function getById(id) {
-    const existing = getList()
+    const existing = get()
     const result = existing.filter(task => task.id === id)
     return (result && result.length) ? result[0] : {}
 }
 
-//save data into local storage
-export function save(payload) {
-    const exsitingItems = getList();
 
-    if (!exsitingItems) {
-        localStorage.setItem(TASK_LIST_KEY, JSON.stringify([]));
+export function createOrUpdate(id, value) {
+    const item = getById(id)
+
+    if (item && item.id) {
+        return edit(id, value)
     }
-
-    const results = [{
-        id: new Date().getTime(),
-        value: payload
-    }, ...getList()]
-
-    localStorage.setItem(TASK_LIST_KEY, JSON.stringify(results));
+    const newItem = { id: id, value: value }
+    const existingitems = get()
+    existingitems.push(newItem)
+    updateToStorage(existingitems)
 }
 
-export function update(payload, task) {
-
-    const items = getList()
-
-    items.map((item) => {
-        if (item.id === payload.id) {
-            item.value = task
+export function edit(id, value) {
+    let items = get();
+    items = items.map((item) => {
+        if (item.id === id) {
+            item.value = value
         }
+        return item
     })
 
-    console.log('items-----', items)
-
-    localStorage.setItem(TASK_LIST_KEY, JSON.stringify(items));
+    updateToStorage(items)
 }
 
 //clear all data
 export function clearAll() {
-    localStorage.setItem(TASK_LIST_KEY, JSON.stringify([]));
+    updateToStorage()
 }
 
-export function remove(payload) {
-
-    localStorage.setItem(TASK_LIST_KEY, JSON.stringify(payload));
+export function remove(id) {
+    let items = get();
+    items = items.filter((item) => (item.id !== id))
+    updateToStorage(items)
 }

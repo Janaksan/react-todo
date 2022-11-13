@@ -10,8 +10,8 @@ export default function Lists({
     return (
         <div className='list-container'>
             {
-                tasks && tasks.map(task => (
-                    <ListItem key={task.id} task={task} handleRemove={handleRemove} handleEdit={handleEdit} />
+                tasks && tasks.map((task, key) => (
+                    <ListItem key={key} task={task} handleRemove={handleRemove} handleEdit={handleEdit} />
                 ))
             }
         </div>
